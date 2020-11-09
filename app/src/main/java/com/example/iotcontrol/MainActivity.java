@@ -5,6 +5,7 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -22,11 +23,15 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager pager;
     private PagerAdapter pagerAdapter;
     public static BottomNavigationView bottomNavigationView;
+    public static Toolbar myBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        myBar = findViewById(R.id.toolbar);
+        setSupportActionBar(myBar);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -36,12 +41,15 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.menuStatistics:
                         pager.setCurrentItem(0);
+                        getSupportActionBar().setTitle("Statistics");
                         break;
                     case R.id.menuHome:
                         pager.setCurrentItem(1);
+                        getSupportActionBar().setTitle("Devices");
                         break;
                     case R.id.menuSettings:
                         pager.setCurrentItem(2);
+                        getSupportActionBar().setTitle("Settings");
                         break;
                 }
                 return true;
@@ -85,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        MainActivity.bottomNavigationView.setSelectedItemId(R.id.menuHome); //nastavení hlavní stránky při startu aplikace
+        //MainActivity.bottomNavigationView.setSelectedItemId(R.id.menuHome); //nastavení hlavní stránky při startu aplikace
+        MainActivity.bottomNavigationView.setSelectedItemId(R.id.menuStatistics); //nastavení hlavní stránky při startu aplikace
 
         //další kod
 

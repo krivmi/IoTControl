@@ -14,6 +14,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ESPConnector extends Thread {
     Handler handler;
@@ -27,8 +30,11 @@ public class ESPConnector extends Thread {
 
         while(isRunning){
             try{
-                URL url = new URL("http://adelakrivankova.wz.cz/php/read_all.php?id=1");
+                //URL url = new URL("http://adelakrivankova.wz.cz/php/fan/read_value.php?id=1");
+                URL url = new URL("http://adelakrivankova.wz.cz/php/temphum/last_value.php");
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setRequestProperty ("Authorization", "Basic amVycnk6MTIzNA==");
 
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 ByteArrayOutputStream buf = new ByteArrayOutputStream();
@@ -39,8 +45,9 @@ public class ESPConnector extends Thread {
                     buf.write(result);
                     result = bis.read();
                 }
-                //Log.v("FanStatus", buf.toString());
-                processJsonResult(buf.toString());
+                Log.v("TempHum", buf.toString());
+                //processJsonResult(buf.toString());
+                processJsonResultTemphum(buf.toString());
 
                 Thread.sleep(2000);
             }
@@ -49,6 +56,48 @@ public class ESPConnector extends Thread {
             }
         }
     }
+    void processJsonResultTemphum(String jsonString) throws JSONException, ParseException {
+        JSONObject jObj = new JSONObject(jsonString);
+        int success = jObj.getInt("success");
+
+        if(success > 0){
+            JSONArray jsonArray = jObj.getJSONArray("temphum");
+
+            for(int i = 0; i < jsonArray.length(); i++){
+                JSONObject o = jsonArray.getJSONObject(i);
+
+                int id = o.getInt("id");
+                long temperature = o.getLong("temperature");
+                long humidity = o.getLong("humidity");
+
+                String dayTime = o.getString("dayTime");
+
+                Bundle b = new Bundle();
+                b.putInt("id", id);
+                b.putLong("temperature", temperature);
+                b.putLong("humidity", humidity);
+                b.putString("dayTime", dayTime);
+
+                Message msg = handler.obtainMessage();
+                msg.setData(b);
+                msg.sendToTarget();
+
+                //Log.v("FAN", id + "  " + temperature + " " + humidity + " " + dayTime);
+            }
+        }
+        else{
+            Bundle b = new Bundle();
+            b.putInt("id", -1);
+            b.putLong("temperature", -1);
+            b.putLong("humidity", -1);
+            b.putString("dayTime", "-1");
+
+            Message msg = handler.obtainMessage();
+            msg.setData(b);
+            msg.sendToTarget();
+        }
+    }
+
     void processJsonResult(String jsonString) throws JSONException{
         JSONObject jObj = new JSONObject(jsonString);
         JSONArray jsonArray = jObj.getJSONArray("fan");
