@@ -10,9 +10,9 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.iotcontrol.fragments.HomeFragment;
-import com.example.iotcontrol.fragments.SettingsFragment;
-import com.example.iotcontrol.fragments.StatisticsFragment;
+import com.example.iotcontrol.fragments.home_fragment.HomeFragment;
+import com.example.iotcontrol.fragments.settings_fragment.SettingsFragment;
+import com.example.iotcontrol.fragments.statistics_fragment.StatisticsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -93,8 +93,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //MainActivity.bottomNavigationView.setSelectedItemId(R.id.menuHome); //nastavení hlavní stránky při startu aplikace
-        MainActivity.bottomNavigationView.setSelectedItemId(R.id.menuStatistics); //nastavení hlavní stránky při startu aplikace
+        MainActivity.bottomNavigationView.setSelectedItemId(R.id.menuHome); //nastavení hlavní stránky při startu aplikace
 
         //další kod
 

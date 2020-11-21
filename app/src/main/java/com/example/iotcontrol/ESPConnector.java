@@ -30,7 +30,6 @@ public class ESPConnector extends Thread {
 
         while(isRunning){
             try{
-                //URL url = new URL("http://adelakrivankova.wz.cz/php/fan/read_value.php?id=1");
                 URL url = new URL("http://adelakrivankova.wz.cz/php/temphum/last_value.php");
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -45,7 +44,7 @@ public class ESPConnector extends Thread {
                     buf.write(result);
                     result = bis.read();
                 }
-                Log.v("TempHum", buf.toString());
+                //Log.v("TempHum", buf.toString());
                 //processJsonResult(buf.toString());
                 processJsonResultTemphum(buf.toString());
 
