@@ -3,4 +3,8 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="text_about">
+        This app was developed to control and observe my home appliances and as a school project.
+        Be free to contact me with your interesting ideas and improvements about design or functionality of the app.
+    </string>
 </resources>
