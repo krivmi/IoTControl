@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.iotcontrol.R;
+import com.example.iotcontrol.ServerConnector;
 
 public class StatisticsFragment extends Fragment {
     GraphView tempGraph;
@@ -20,17 +21,12 @@ public class StatisticsFragment extends Fragment {
     Handler handler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
-            //txt2.setText("ID = " + String.valueOf(msg.getData().getInt("id")));
-            //txt3.setText("PowerStatus = " + String.valueOf(msg.getData().getString("powerStatus")));
-
             String [] data = msg.getData().getStringArray("dayTimes");
             double [] temp = msg.getData().getDoubleArray("avg_temps");
             double [] hum = msg.getData().getDoubleArray("avg_hums");
 
-
             tempGraph.setAttr("temp", data, temp, true);
             humGraph.setAttr("hum", data, hum, true);
-
         }
     };
 
@@ -42,14 +38,14 @@ public class StatisticsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.fragment_statistics, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_statistics, container, false);
 
         tempGraph = rootView.findViewById(R.id.graphTemp);
         humGraph = rootView.findViewById(R.id.graphHum);
 
-        WeekThread t = new WeekThread(handler);
-        t.start();
+        String url = "http://adelakrivankova.wz.cz/php/temphum/week_values.php";
+        ServerConnector sc = new ServerConnector(handler, url, "WEEK_STATS", 20000);
+        sc.start();
 
         String [] data = {"0.0"};
         double [] temp = {0};

@@ -34,7 +34,7 @@ public class ItemsAdapter extends ArrayAdapter<Item> {
         icon.setImageResource(item.resImg);
 
         itemName.setText(item.name);
-        itemStatus.setText(item.status);
+        itemStatus.setText(item.status.toUpperCase());
         // Return the completed view to render on screen
         return convertView;
     }

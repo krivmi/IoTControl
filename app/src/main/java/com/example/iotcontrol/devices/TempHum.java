@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,11 +24,18 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.iotcontrol.ESPConnector;
 import com.example.iotcontrol.R;
+import com.example.iotcontrol.ServerConnector;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 
 public class TempHum extends AppCompatActivity {
     Handler handler = new Handler(){
+        @RequiresApi(api = Build.VERSION_CODES.O)
         public void handleMessage(@NonNull Message msg) {
 
             txt4.setText(Html.fromHtml("Temperature: " + "<font color=black>" + String.valueOf(msg.getData().getLong("temperature") + " °C</font>")));
@@ -36,14 +46,15 @@ public class TempHum extends AppCompatActivity {
             drawTempHum(msg.getData().getLong("humidity"), 3.8F, -20, Color.rgb(29, 67, 144), R.drawable.humidity_large, imgHumLarge);
         }
     };
-    public static Toolbar myBar;
-
+    Toolbar myBar;
     TextView txt4;
     TextView txt5;
     TextView txt6;
-    TextView txt7;
     ImageView imgTempLarge;
     ImageView imgHumLarge;
+
+    String date;
+    ServerConnector sc;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,15 +71,25 @@ public class TempHum extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Thermo - Hydro meter");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        myBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sc.stopThread();
+                finish();
+            }
+        });
+
         myBar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
 
         imgTempLarge.setImageResource(R.drawable.temp_large);
         imgHumLarge.setImageResource(R.drawable.humidity_large);
 
-        ESPConnector esp = new ESPConnector(handler);
-        esp.start();
+        String url = "http://adelakrivankova.wz.cz/php/temphum/last_value.php";
+        sc = new ServerConnector(handler, url, "DHT_VALUE", 4000);
+        sc.start();
     }
-    public void drawTempHum(long value, float part, int jump, int color, int imagePath, ImageView i){         // vykresleni hodnoty do obrázku
+    private void drawTempHum(long value, float part, int jump, int color, int imagePath, ImageView i){         // vykresleni hodnoty do obrázku
         BitmapFactory.Options myOptions = new BitmapFactory.Options();
         myOptions.inDither = true;
         myOptions.inScaled = false;
@@ -98,5 +119,66 @@ public class TempHum extends AppCompatActivity {
         i.setAdjustViewBounds(true);
         i.setImageBitmap(mutableBitmap);
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+
+    private boolean isOn(){
+
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
+        SimpleDateFormat sdf2= new SimpleDateFormat("yyyy/M/dd hh:mm:ss");
+        try {
+            Date date1 = sdf2.parse(date);
+            Date date2 = Calendar.getInstance().getTime();
+
+            long [] result = getDifference(date1, date2);
+
+            if(result[0] < 1 && result[1] < 1 && result[2] < 5){
+                return true;
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public long [] getDifference(Date startDate, Date endDate) {
+        //milliseconds
+        long different = endDate.getTime() - startDate.getTime();
+
+        Log.v("LOG", "startDate : " + startDate);
+        Log.v("LOG","endDate : "+ endDate);
+        Log.v("LOG","different : " + different);
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+
+        long elapsedSeconds = different / secondsInMilli;
+
+        Log.v("TAG", elapsedDays + " " +elapsedHours+ " " + elapsedMinutes+ " " +elapsedSeconds);
+        long [] result = {elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds};
+        return result;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            sc.stopThread();
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
 }

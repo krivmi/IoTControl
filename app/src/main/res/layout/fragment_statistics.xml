@@ -5,41 +5,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp"
     tools:context=".fragments.statistics_fragment.StatisticsFragment">
 
     <TextView
         android:id="@+id/textViewTemp"
         android:textSize="20dp"
+        android:textColor="@color/colorBlack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Temperature last 7 days"
         android:layout_gravity="center"
         android:layout_weight="0"
-        android:paddingBottom="5dp"
+        android:padding="15dp"
+        android:background="@drawable/back_heading"
         />
     <com.example.iotcontrol.fragments.statistics_fragment.GraphView
         android:id="@+id/graphTemp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="8"
+        android:layout_margin="8dp"
         />
     <TextView
         android:id="@+id/textViewHum"
         android:textSize="20dp"
+        android:textColor="@color/colorBlack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Humidity last 7 days"
         android:layout_gravity="center"
         android:layout_weight="0"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
+        android:padding="15dp"
+        android:background="@drawable/back_heading"
         />
     <com.example.iotcontrol.fragments.statistics_fragment.GraphView
         android:id="@+id/graphHum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="8"
+        android:layout_margin="8dp"
         />
 
 

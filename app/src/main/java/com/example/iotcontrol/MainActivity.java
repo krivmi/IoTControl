@@ -1,11 +1,15 @@
 package com.example.iotcontrol;
 
+import android.app.Notification;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -19,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
     private ViewPager pager;
     private PagerAdapter pagerAdapter;
     public static BottomNavigationView bottomNavigationView;
@@ -28,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
 
         myBar = findViewById(R.id.toolbar);
@@ -65,13 +67,10 @@ public class MainActivity extends AppCompatActivity {
         pager = findViewById(R.id.viewPager);
         pagerAdapter = new SlidePagerAdapter(getSupportFragmentManager(), list, bottomNavigationView);
         pager.setAdapter(pagerAdapter);
-
         pager.setOffscreenPageLimit(4);
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
             @Override
             public void onPageSelected(int position) {
@@ -87,19 +86,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
             }
-
             @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
+            public void onPageScrollStateChanged(int state) { }
         });
 
-        MainActivity.bottomNavigationView.setSelectedItemId(R.id.menuHome); //nastavení hlavní stránky při startu aplikace
-
-        //další kod
-
-
+        bottomNavigationView.setSelectedItemId(R.id.menuHome); //nastavení hlavní stránky při startu aplikace
     }
-
-
 }

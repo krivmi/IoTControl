@@ -105,7 +105,7 @@ public class GraphView extends View {
 
             pointsHors.add(new Points(dX, dY, values[i - 1]));
             canvas.drawCircle(dX, dY,dotSize, p_points);
-            canvas.drawText(dateValues[i - 1], dX - 30, dY + 45, p_text);
+            canvas.drawText(dateValues[i - 1], dX - 43, dY + 45, p_text);
         }
 
         // TEPLOTA NEBO VLHKOST

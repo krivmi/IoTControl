@@ -3,5 +3,6 @@
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#009688</color>
     <color name="colorBlack">#000000</color>
-    <color name="colorWeird">#E6E6E6</color>
+    <color name="colorWeird">#F4F4F4</color>
+    <color name="colorFan">#1d4390</color>
 </resources>
