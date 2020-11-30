@@ -11,13 +11,14 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark">
+        >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:titleTextColor="@color/colorPrimary" />
+            android:background="@color/colorAqua"
+            app:titleTextColor="@color/colorWhite" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -33,10 +34,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="10"
-        android:background="#009688"
-        android:backgroundTint="#000000"
-        app:itemRippleColor="#FFFFFF"
-        app:itemTextColor="#FFFFFF"
+        android:background="@color/colorAqua"
+        app:itemTextColor="@color/colorWhite"
+        app:itemRippleColor="@color/colorWhite"
         app:menu="@menu/menu_bottom">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>

@@ -59,7 +59,7 @@ public class ServerConnector extends Thread {
                     processJsonResultDHT(buf.toString());
                 }
                 else if(name.equals("FAN_TOOGLE")){
-                    Log.v(name, buf.toString());
+                    //Log.v(name, buf.toString());
                     processJsonFan(buf.toString());
                 }
                 else if(name.equals("WEEK_STATS")){

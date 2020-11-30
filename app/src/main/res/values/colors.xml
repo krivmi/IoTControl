@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFFFFF</color>
-    <color name="colorPrimaryDark">#009688</color>
+    <color name="colorWhite">#FFFFFF</color> //colorPrimary
+    <color name="colorAqua">#009688</color>
     <color name="colorBlack">#000000</color>
     <color name="colorWeird">#F4F4F4</color>
     <color name="colorFan">#1d4390</color>
+    <color name="colorLayout">#222222</color>
+
+    <color name="colorWhite_darkmode">#000000</color>
+    <color name="colorPrimaryDark_darkmode">#43009688</color>
+    <color name="colorBlack_darkmode">#FFFFFF</color>
+    <color name="colorWeird_darkmode">#535353</color>
+    <color name="colorFan_darkmode">#9C1D4390</color>
 </resources>

@@ -5,7 +5,6 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -55,7 +54,7 @@ public class Fan extends AppCompatActivity {
         setSupportActionBar(myBar);
         getSupportActionBar().setTitle("Rowenta fan");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        myBar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+        myBar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
         myBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

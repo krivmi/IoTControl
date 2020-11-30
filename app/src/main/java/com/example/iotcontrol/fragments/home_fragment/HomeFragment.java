@@ -1,7 +1,11 @@
 package com.example.iotcontrol.fragments.home_fragment;
 
 import android.app.Notification;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,7 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,8 +39,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class HomeFragment extends Fragment {
+    private static Context context;
+
     private NotificationManagerCompat notificationManager;
 
+    LinearLayout fragment_home;
     ListView itemListView;
     ItemsAdapter adapter;
     ArrayList<Item> arrayList;
@@ -60,25 +70,29 @@ public class HomeFragment extends Fragment {
             else{ arrayList.get(1).status = "OFF"; }
             adapter.notifyDataSetChanged();
 
-            if(!wasChecked) {
-                if (actHum > 65) {
-                    String title = "Humidity";
-                    String message = "Humidity in your room exceeded 65 %, we recommend you to open the window.";
-                    sendOnChannel1(title, message);
-                } else if (actHum < 45) {
-                    String title = "Humidity";
-                    String message = "Humidity in your room is below 45 %, we recommend you to increase it.";
-                    sendOnChannel1(title, message);
+            SharedPreferences sh = context.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+            boolean notifyMe = sh.getBoolean("notification", true);
+            Log.v("NOTIFY:",   String.valueOf(notifyMe));
+            if(notifyMe) {
+                if (!wasChecked) {
+                    if (actHum > 65) {
+                        String title = "Humidity";
+                        String message = "Humidity in your room exceeded 65 %, we recommend you to open the window.";
+                        sendOnChannel1(title, message);
+                    } else if (actHum < 45) {
+                        String title = "Humidity";
+                        String message = "Humidity in your room is below 35 %, we recommend you to increase it.";
+                        sendOnChannel1(title, message);
+                    }
+                    lastNotificationDate = getCurrentDateFormatted();
+                    wasChecked = true;
                 }
-                lastNotificationDate = getCurrentDateFormatted();
-                wasChecked = !wasChecked;
-            }
-            long [] difference2 = dateCompare(lastNotificationDate, getCurrentDateFormatted());
-            if(difference2[0] < 1 && difference2[1] < 1 && difference2[2] < 1 && difference2[3] > 30){
-                wasChecked = false;
-            }
-            else{
-                wasChecked = true;
+                long[] difference2 = dateCompare(lastNotificationDate, getCurrentDateFormatted());
+                if (difference2[0] < 1 && difference2[1] < 1 && difference2[2] > 5 /*&& difference2[3] > 20*/) { // po 5 minutách dojde znovu notifikace, pokud je přesáhnuta hranice vlhkosti
+                    wasChecked = false;
+                } else {
+                    wasChecked = true;
+                }
             }
         }
     };
@@ -93,6 +107,8 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_home, container, false);
 
+        context = getContext();
+
         String url = "http://adelakrivankova.wz.cz/php/fan/read_value.php?id=1";
         ServerConnector t_fan = new ServerConnector(handler_fan, url, "FAN_TOOGLE", 4000);
         t_fan.start();
@@ -101,10 +117,23 @@ public class HomeFragment extends Fragment {
         ServerConnector t_dht = new ServerConnector(handler_dht, url2, "DHT_VALUE", 4000);
         t_dht.start();
 
+        SharedPreferences sh = this.getActivity().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+        boolean nightModeOn = sh.getBoolean("night", false);
+
+        int imgRes [] = {R.drawable.fan_icon, R.drawable.thermometer_icon};
+
+        if(nightModeOn){
+            fragment_home = rootView.findViewById(R.id.fragment_home);
+            fragment_home.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+
+            imgRes[0] = R.drawable.fan_icon_dark;
+            imgRes[1] = R.drawable.thermometer_icon_dark;
+        }
+
         int ids [] = {0, 1};
         String texts [] = {"Rowenta fan", "DHT11 Thermo - hydro meter"};
         String statuses [] = {"OFF", "OFF"};
-        int imgRes [] = {R.drawable.fan_icon, R.drawable.thermometer_icon};
+
 
         arrayList = new ArrayList<Item>();
         for(int i = 0; i < ids.length; i++){
@@ -133,7 +162,6 @@ public class HomeFragment extends Fragment {
         });
 
         notificationManager = NotificationManagerCompat.from(getContext());
-
 
         return rootView;
     }
@@ -207,25 +235,17 @@ public class HomeFragment extends Fragment {
         return result;
     }
     public void sendOnChannel1(String title, String message){
-
+        //Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         Notification notification = new NotificationCompat.Builder(getContext(), App.CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_one)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setVibrate(new long[] { 400, 400 })
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .build();
 
         notificationManager.notify(1, notification);
-    }
-    public void sendOnChannel2(String title, String message){
-        Notification notification = new NotificationCompat.Builder(getContext(), App.CHANNEL_2_ID)
-                .setSmallIcon(R.drawable.ic_two)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .build();
-
-        notificationManager.notify(2, notification);
     }
 }

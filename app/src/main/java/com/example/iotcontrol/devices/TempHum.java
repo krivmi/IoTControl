@@ -80,7 +80,7 @@ public class TempHum extends AppCompatActivity {
             }
         });
 
-        myBar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+        myBar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
 
         imgTempLarge.setImageResource(R.drawable.temp_large);
         imgHumLarge.setImageResource(R.drawable.humidity_large);

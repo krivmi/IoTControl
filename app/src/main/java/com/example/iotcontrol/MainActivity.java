@@ -1,6 +1,10 @@
 package com.example.iotcontrol;
 
 import android.app.Notification;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -91,5 +95,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
         bottomNavigationView.setSelectedItemId(R.id.menuHome); //nastavení hlavní stránky při startu aplikace
+
+        SharedPreferences sh = this.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+        boolean nightModeOn = sh.getBoolean("night", false);
+
+        ColorStateList myColorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled},
+                        new int[]{-android.R.attr.state_checked}
+                },
+                new int[] {
+                        getResources().getColor(R.color.colorWhite),
+                        getResources().getColor(R.color.colorFan),
+                        getResources().getColor(R.color.colorAqua),
+                }
+        );
+
+        if(nightModeOn){
+            myBar.setBackgroundColor(getResources().getColor(R.color.colorLayout));
+            myBar.setTitleTextColor(getResources().getColor(R.color.colorAqua));
+            bottomNavigationView.setBackgroundColor(getResources().getColor(R.color.colorLayout));
+            bottomNavigationView.setItemTextColor(myColorStateList);
+            bottomNavigationView.setItemIconTintList(myColorStateList);
+
+        }
     }
 }

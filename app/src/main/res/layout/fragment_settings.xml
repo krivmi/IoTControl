@@ -13,14 +13,14 @@
         android:layout_height="wrap_content"
         android:text="Notifications"
         android:padding="15dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorWhite"
         android:layout_marginTop="15dp"/>
     <Switch
         android:id="@+id/night_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Night mode"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorWhite"
         android:padding="15dp"/>
 
     <TextView
@@ -31,7 +31,7 @@
         android:padding="15dp"
         android:layout_marginTop="15dp"
         android:textAlignment="textStart"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorWhite"
         android:text="About app"/>
     <TextView
         android:id="@+id/about_text"
@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="12dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorWhite"
         android:justificationMode="inter_word"
         android:text="@string/text_about"/>
 
@@ -50,7 +50,7 @@
         android:padding="12dp"
         android:textColor="@color/colorBlack"
         android:layout_marginTop="15dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorWhite"
         android:justificationMode="inter_word"
         android:text="Contact"/>
 
@@ -59,14 +59,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="12dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorWhite"
         android:justificationMode="inter_word"
         android:text="milan.krivanekjr@gmail.com"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorWhite"
         android:orientation="horizontal">
 
         <TextView
