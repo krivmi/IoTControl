@@ -1,5 +1,7 @@
 package com.example.iotcontrol.devices;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.iotcontrol.R;
 import com.example.iotcontrol.ServerConnector;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -33,6 +36,7 @@ public class Fan extends AppCompatActivity {
             compareStatus();
         }
     };
+    boolean nightModeOn = false;
     Toolbar myBar;
     LinearLayout onoff;
     ImageView onoff_img;
@@ -63,12 +67,8 @@ public class Fan extends AppCompatActivity {
             }
         });
 
-
-
-
         onoff_img = findViewById(R.id.onoff_img);
         compareStatus();
-
 
         onoff = findViewById(R.id.onoff);
         onoff.setOnTouchListener(new View.OnTouchListener() {
@@ -77,7 +77,10 @@ public class Fan extends AppCompatActivity {
                 if(v == onoff){
                     switch(event.getAction()){
                         case MotionEvent.ACTION_DOWN:{
-                            onoff.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_border_effect) );
+                            //promáčknutí změna pozadí
+                            if(!nightModeOn){
+                                onoff.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_border_effect) );
+                            }
                             onoff.invalidate();
                             break;
                         }
@@ -99,8 +102,11 @@ public class Fan extends AppCompatActivity {
                                 }
                             });
                             t.start();
+                            // změna trvalá po kliknutí
+                            if(!nightModeOn){
+                                onoff.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_border) );
+                            }
 
-                            onoff.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_border) );
                             onoff.invalidate();
                             //necoo
                             break;
@@ -110,6 +116,34 @@ public class Fan extends AppCompatActivity {
                 return true;
             }
         });
+
+        SharedPreferences sh = this.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+
+        if(sh.getBoolean("night", false)){
+            myBar.setBackgroundColor(getResources().getColor(R.color.colorLayout));
+            myBar.setTitleTextColor(getResources().getColor(R.color.colorAqua));
+            myBar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.colorAqua), PorterDuff.Mode.SRC_ATOP);
+
+            LinearLayout fan_layout = (LinearLayout) findViewById(R.id.fan_layout);
+            fan_layout.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+
+            LinearLayout night = (LinearLayout) findViewById(R.id.night);
+            LinearLayout turbo = (LinearLayout) findViewById(R.id.turbo);
+            LinearLayout time = (LinearLayout) findViewById(R.id.time);
+            LinearLayout desc = (LinearLayout) findViewById(R.id.desc);
+            LinearLayout plus = (LinearLayout) findViewById(R.id.plus);
+            View line_fan = (View) findViewById(R.id.line_fan);
+
+            onoff.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_border_dark) );
+            night.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_border_dark) );
+            turbo.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_border_dark) );
+            time.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_border_dark) );
+            desc.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_border_dark) );
+            plus.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_border_dark) );
+            line_fan.setBackgroundColor(getResources().getColor(R.color.colorAqua));
+
+            nightModeOn = true;
+        }
     }
 
     @Override
@@ -121,20 +155,43 @@ public class Fan extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-    public void compareStatus(){
-        if(status.equals("on")){ onoff_img.getDrawable().setColorFilter(Color.rgb(29, 67, 144), PorterDuff.Mode.SRC_ATOP);}
-        else{onoff_img.getDrawable().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);}
+    public void compareStatus(){ //změna zapnutí nebo vypnutí podle aktuální situace
+        if(status.equals("on")){
+            if(!nightModeOn){
+                onoff_img.getDrawable().setColorFilter(Color.rgb(29, 67, 144), PorterDuff.Mode.SRC_ATOP);
+            }
+            else{
+                onoff.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_border_dark_on) );
+            }
+        }
+        else if(status.equals("off")) {
+            if(!nightModeOn){
+                onoff_img.getDrawable().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+            }
+            else{
+                onoff.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_border_dark) );
+            }
+        }
     }
 
     public void toogleFan(ImageView i){
         if(status.equals("on")){
-            i.getDrawable().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+            if(!nightModeOn){
+                i.getDrawable().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+            }
+            else{
+                onoff.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_border_dark) );
+            }
             status = "off";
         }
         else if(status.equals("off")){
-            i.getDrawable().setColorFilter(Color.rgb(29, 67, 144), PorterDuff.Mode.SRC_ATOP);
+            if(!nightModeOn){
+                i.getDrawable().setColorFilter(Color.rgb(29, 67, 144), PorterDuff.Mode.SRC_ATOP);
+            }
+            else{
+                onoff.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_border_dark_on) );
+            }
             status = "on";
         }
     }
-
 }

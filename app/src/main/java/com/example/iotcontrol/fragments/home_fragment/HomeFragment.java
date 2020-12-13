@@ -48,8 +48,8 @@ public class HomeFragment extends Fragment {
     ItemsAdapter adapter;
     ArrayList<Item> arrayList;
 
+    String defaultDate = "2020/01/01 00:00:00";
     boolean wasChecked = false;
-    String lastNotificationDate;
 
     Handler handler_fan = new Handler(){
         public void handleMessage(@NonNull Message msg) {
@@ -66,31 +66,40 @@ public class HomeFragment extends Fragment {
             String start_date = actDayTime.replace("-", "/");
             long [] difference = dateCompare(start_date, getCurrentDateFormatted());
 
-            if(difference[0] < 1 && difference[1] < 1 && difference[2] < 1 && difference[3] < 30){ arrayList.get(1).status = "ON"; }
+            if(difference[0] < 1 && difference[1] < 1 && difference[2] < 1 && difference[3] < 60){ arrayList.get(1).status = "ON"; }
             else{ arrayList.get(1).status = "OFF"; }
             adapter.notifyDataSetChanged();
+            //Toast.makeText(getContext(), difference[0] + " " + difference[1]+ " " +  difference[2]+ " " +  difference[3], Toast.LENGTH_SHORT).show();
 
             SharedPreferences sh = context.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
             boolean notifyMe = sh.getBoolean("notification", true);
-            Log.v("NOTIFY:",   String.valueOf(notifyMe));
+
+            //Log.v("NOTIFY:",   String.valueOf(notifyMe));
+
+            long[] difference2 = dateCompare(sh.getString("lastNotificationDate", defaultDate), getCurrentDateFormatted());
+            if (difference2[0] >= 0 && difference2[1] >= 0 && difference2[2] >= 5 && difference2[3] >= 0) { // po 5 minutách dojde znovu notifikace, pokud je přesáhnuta hranice vlhkosti
+                wasChecked = false;
+            } else {
+                wasChecked = true;
+            }
+            //Toast.makeText(getContext(), difference2[0] + " " + difference2[1]+ " " +  difference2[2]+ " " +  difference2[3], Toast.LENGTH_SHORT).show();
+
             if(notifyMe) {
-                if (!wasChecked) {
+                if (!wasChecked && arrayList.get(1).status.equals("ON")) { //notifikace dojde jen pokud je aktuálně zařízení připojené, snímá vlhkost a je dodržen 5 minutový odstup od předchozí notifikace
                     if (actHum > 65) {
                         String title = "Humidity";
                         String message = "Humidity in your room exceeded 65 %, we recommend you to open the window.";
                         sendOnChannel1(title, message);
-                    } else if (actHum < 45) {
+                    } else if (actHum < 40) {
                         String title = "Humidity";
-                        String message = "Humidity in your room is below 35 %, we recommend you to increase it.";
+                        String message = "Humidity in your room is below 40 %, we recommend you to increase it.";
                         sendOnChannel1(title, message);
                     }
-                    lastNotificationDate = getCurrentDateFormatted();
-                    wasChecked = true;
-                }
-                long[] difference2 = dateCompare(lastNotificationDate, getCurrentDateFormatted());
-                if (difference2[0] < 1 && difference2[1] < 1 && difference2[2] > 5 /*&& difference2[3] > 20*/) { // po 5 minutách dojde znovu notifikace, pokud je přesáhnuta hranice vlhkosti
-                    wasChecked = false;
-                } else {
+                    String lastNotificationDate = getCurrentDateFormatted();
+                    SharedPreferences.Editor myEdit = sh.edit();
+                    myEdit.putString("lastNotificationDate", lastNotificationDate);
+                    myEdit.commit();
+
                     wasChecked = true;
                 }
             }
@@ -148,7 +157,7 @@ public class HomeFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Item myItem = (Item) itemListView.getItemAtPosition(position);
 
-                Toast.makeText(getActivity().getApplicationContext(), myItem.name, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity().getApplicationContext(), myItem.name, Toast.LENGTH_SHORT).show();
 
                 if(myItem.id == 0){
                     Intent intent = new Intent(getActivity().getApplicationContext(), Fan.class);
@@ -184,7 +193,7 @@ public class HomeFragment extends Fragment {
         return false;
     }
     private long[] dateCompare(String start_date, String stopDate){
-        SimpleDateFormat sdf= new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         long [] result = new long[4];
         try {
             Date date1 = sdf.parse(start_date);
@@ -200,9 +209,9 @@ public class HomeFragment extends Fragment {
     public String getCurrentDateFormatted(){
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.HOUR_OF_DAY, 1);
+        //cal.add(Calendar.HOUR_OF_DAY, 1);
 
-        SimpleDateFormat sdf= new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
         return sdf.format(cal.getTime());
     }
@@ -231,12 +240,12 @@ public class HomeFragment extends Fragment {
         long elapsedSeconds = different / secondsInMilli;
 
         //Log.v("TAG", elapsedDays + " " +elapsedHours+ " " + elapsedMinutes+ " " +elapsedSeconds);
-        long [] result = {elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds};
+        long [] result = {Math.abs(elapsedDays), Math.abs(elapsedHours), Math.abs(elapsedMinutes), Math.abs(elapsedSeconds)};
         return result;
     }
     public void sendOnChannel1(String title, String message){
         //Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        Notification notification = new NotificationCompat.Builder(getContext(), App.CHANNEL_1_ID)
+        Notification notification = new NotificationCompat.Builder(context, App.CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_one)
                 .setContentTitle(title)
                 .setContentText(message)

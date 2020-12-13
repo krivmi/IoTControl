@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:id="@+id/fan_layout"
@@ -44,6 +45,7 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/line_fan"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginTop="40dp"
@@ -102,6 +104,7 @@
                 android:text="Turbo boost"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/circle_border"
@@ -131,6 +134,7 @@
         android:paddingRight="70dp"
         android:paddingTop="10dp">
         <LinearLayout
+            android:id="@+id/desc"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:background="@drawable/circle_border"
@@ -152,6 +156,7 @@
                 android:text="Decrescendo"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/plus"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:background="@drawable/circle_border"

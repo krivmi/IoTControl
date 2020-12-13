@@ -1,11 +1,15 @@
 package com.example.iotcontrol.fragments.statistics_fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +47,34 @@ public class StatisticsFragment extends Fragment {
         tempGraph = rootView.findViewById(R.id.graphTemp);
         humGraph = rootView.findViewById(R.id.graphHum);
 
+        SharedPreferences sh = this.getActivity().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+
+        int color1 = getResources().getColor(R.color.colorBlack);
+        int color2 = getResources().getColor(R.color.colorGraphDots);
+        int color3 = getResources().getColor(R.color.colorGraphLines);
+        int color4 = getResources().getColor(R.color.colorBlack);
+
+        if(sh.getBoolean("night", false)){
+            color1 = getResources().getColor(R.color.colorAqua);
+            color2 = getResources().getColor(R.color.colorAquaDark);
+            color3 = getResources().getColor(R.color.colorAqua);
+            color4 = getResources().getColor(R.color.colorAqua);
+
+
+            LinearLayout _statisticsLayout = (LinearLayout) rootView.findViewById(R.id.statistics_fragment);
+            TextView _temp = (TextView) rootView.findViewById(R.id.textViewTemp);
+            TextView _hum = (TextView) rootView.findViewById(R.id.textViewHum);
+
+            _statisticsLayout.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+            _temp.setBackgroundColor(getResources().getColor(R.color.colorLayout));
+            _hum.setBackgroundColor(getResources().getColor(R.color.colorLayout));
+            _temp.setTextColor(getResources().getColor(R.color.colorAqua));
+            _hum.setTextColor(getResources().getColor(R.color.colorAqua));
+            tempGraph.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+            humGraph.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+
+        }
+
         String url = "http://adelakrivankova.wz.cz/php/temphum/week_values.php";
         ServerConnector sc = new ServerConnector(handler, url, "WEEK_STATS", 20000);
         sc.start();
@@ -51,8 +83,9 @@ public class StatisticsFragment extends Fragment {
         double [] temp = {0};
         double [] hum = {0};
 
-        tempGraph.setAttr("temp", data, temp, false);
-        humGraph.setAttr("hum", data, hum, false);
+        tempGraph.setAttr("temp", data, temp, false, color1, color2, color3, color4);
+        humGraph.setAttr("hum", data, hum, false, color1, color2, color3, color4);
+
 
         return rootView;
     }

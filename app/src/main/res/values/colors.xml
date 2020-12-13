@@ -6,10 +6,8 @@
     <color name="colorWeird">#F4F4F4</color>
     <color name="colorFan">#1d4390</color>
     <color name="colorLayout">#222222</color>
-
-    <color name="colorWhite_darkmode">#000000</color>
-    <color name="colorPrimaryDark_darkmode">#43009688</color>
-    <color name="colorBlack_darkmode">#FFFFFF</color>
-    <color name="colorWeird_darkmode">#535353</color>
-    <color name="colorFan_darkmode">#9C1D4390</color>
+    <color name="colorGraphLines">#3b8ea5</color>
+    <color name="colorGraphDots">#2d728f</color>
+    <color name="colorAquaDark">#005E55</color>
+    <color name="colorFanDark">#F4511E</color>
 </resources>

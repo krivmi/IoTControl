@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/temphum_fragment"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -23,41 +25,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:textSize="18dp"
+        android:textSize="20dp"
         android:background="@drawable/back_heading"
         android:textColor="@color/colorBlack"
         android:text="Actual info" />
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tempText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
+        android:padding="15dp"
+        android:background="@color/colorWhite"
         android:textSize="18dp"
+        android:layout_marginTop="15dp"
         android:text="temperature" />
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/humText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="20dp"
+        android:background="@color/colorWhite"
+        android:padding="15dp"
+        android:layout_marginTop="5dp"
         android:text="humidity" />
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/dateText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
         android:textSize="18dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="20dp"
+        android:padding="15dp"
+        android:layout_marginTop="5dp"
         android:text="Posledni aktualizace: dd.mm.yyyy hh:mm:ss" />
     <LinearLayout
+        android:id="@+id/image_holder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="15dp"
+        android:paddingTop="15dp"
         android:orientation="horizontal">
         <ImageView
             android:id="@+id/temperature_large"

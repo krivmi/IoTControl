@@ -15,6 +15,10 @@ public class GraphView extends View {
     String type;
     String [] dateValues;
     float [] values;
+    int color1;
+    int color2;
+    int color3;
+    int color4;
 
     float originX = 0;
     float originY = 0;
@@ -30,13 +34,31 @@ public class GraphView extends View {
         originX = offset;
         originY = ch - offset;
     }
+    public void setAttr(String type, String [] dateValues, double [] values, boolean innvalidate, int color1, int color2, int color3, int color4){
+        this.type = type;
+        this.dateValues = dateValues;
+        this.color1 = color1;
+        this.color2 = color2;
+        this.color3 = color3;
+        this.color4 = color4;
+
+        float [] arr = new float[values.length];
+        for(int i = 0; i < arr.length; i++) {
+             arr[i] = (float) values[i];
+        }
+        this.values = arr;
+
+        if(innvalidate){
+            invalidate();
+        }
+    }
     public void setAttr(String type, String [] dateValues, double [] values, boolean innvalidate){
         this.type = type;
         this.dateValues = dateValues;
 
         float [] arr = new float[values.length];
         for(int i = 0; i < arr.length; i++) {
-             arr[i] = (float) values[i];
+            arr[i] = (float) values[i];
         }
         this.values = arr;
 
@@ -78,10 +100,10 @@ public class GraphView extends View {
 
         setOriginCoor(offset);
 
-        Paint p_lines = setPaint(Color.BLACK, Paint.Style.FILL, 8);
-        Paint p_points = setPaint(Color.rgb( 45, 114, 143), Paint.Style.FILL, 8);
-        Paint p_text = setPaint(Color.BLACK, Paint.Style.FILL, 8, 35);
-        Paint p_lines_dots = setPaint(Color.rgb(59, 142, 165), Paint.Style.FILL, 6);
+        Paint p_lines = setPaint(color1, Paint.Style.FILL, 8);
+        Paint p_points = setPaint(color2, Paint.Style.FILL, 8);
+        Paint p_text = setPaint(color4, Paint.Style.FILL, 8, 35);
+        Paint p_lines_dots = setPaint(color3, Paint.Style.FILL, 6);
 
         // BORDER
         //paint.setStyle(Paint.Style.STROKE);

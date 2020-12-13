@@ -50,8 +50,8 @@ public class ItemsAdapter extends ArrayAdapter<Item> {
             TextView _name = (TextView) convertView.findViewById(R.id.itemName);
             TextView _status = (TextView) convertView.findViewById(R.id.itemStatus);
 
-            _name.setTextColor(_context.getResources().getColor(R.color.colorWhite));
-            _status.setTextColor(_context.getResources().getColor(R.color.colorWhite));
+            _name.setTextColor(_context.getResources().getColor(R.color.colorAqua));
+            _status.setTextColor(_context.getResources().getColor(R.color.colorAqua));
         }
         return convertView;
     }

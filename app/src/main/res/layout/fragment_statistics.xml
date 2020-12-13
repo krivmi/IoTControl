@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/statistics_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -17,15 +18,13 @@
         android:layout_gravity="center"
         android:layout_weight="0"
         android:padding="15dp"
-        android:background="@drawable/back_heading"
-        />
+        android:background="@drawable/back_heading"/>
     <com.example.iotcontrol.fragments.statistics_fragment.GraphView
         android:id="@+id/graphTemp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="8"
-        android:layout_margin="8dp"
-        />
+        android:layout_margin="8dp"/>
     <TextView
         android:id="@+id/textViewHum"
         android:textSize="20dp"
@@ -36,15 +35,13 @@
         android:layout_gravity="center"
         android:layout_weight="0"
         android:padding="15dp"
-        android:background="@drawable/back_heading"
-        />
+        android:background="@drawable/back_heading"/>
     <com.example.iotcontrol.fragments.statistics_fragment.GraphView
         android:id="@+id/graphHum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="8"
-        android:layout_margin="8dp"
-        />
+        android:layout_margin="8dp"/>
 
 
 </LinearLayout>
